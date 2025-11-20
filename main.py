@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware 
 import httpx
 from pydantic import BaseModel
 from typing import Optional
@@ -8,6 +9,14 @@ app = FastAPI(
     description="A RESTful API that intelligently resolves city ambiguity to recommend travel.",
     version="1.1.0",
 )
+# Add CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://andrewcastro.dev"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- DATA MODELS ---
 class Weather(BaseModel):
@@ -16,7 +25,7 @@ class Weather(BaseModel):
     wind_speed: float
 
 class Recommendation(BaseModel):
-    country: str  # Added this field so the API response includes the country
+    country: str  
     city: str
     state: Optional[str]
     score: int
@@ -45,7 +54,6 @@ def get_score(temp: float, wind: float, rain: float) -> dict:
     # Wind Logic
     if wind > 20:
         score -= 15
-        # Append string to avoid overwriting temp verdict
         score_verdict += " & Windy"
 
     # Rain Logic
@@ -93,7 +101,7 @@ async def recommend_trip(
                 continue
 
             # If user provided state, skip if it doesn't match
-            # Open-Meteo stores states in "admin1"
+            # Meteo stores states in "admin1"
             if state:
                 admin1 = candidate.get("admin1", "").lower()
                 if state.lower() not in admin1: 
