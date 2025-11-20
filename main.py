@@ -37,29 +37,70 @@ def get_score(temp: float, wind: float, rain: float) -> dict:
     score = 100
     score_verdict = "Perfect"
 
+
     # Temperature Logic
-    if temp < 1:
-        score -= 40
+    ideal_temp = 25
+    diff = abs(temp - ideal_temp) # gradually subtract points based on the difference (sway) from ideal_temp
+    score -= (diff * 2.0)
+    if temp < -5:
+        score_verdict = "Dangerously Cold"
+    elif temp < 0:
         score_verdict = "Freezing"
+    elif temp < 5:
+        score_verdict = "Very Cold"
     elif temp < 10:
-        score -= 20
         score_verdict = "Cold"
-    elif temp > 33:
-        score -= 20
+    elif temp < 16:
+        score_verdict = "Chilly"
+    elif temp < 26:
+        score_verdict = "Perfect"
+    elif temp < 30:
+        score_verdict = "Warm"
+    elif temp < 35:
+        score_verdict = "Hot"
+    elif temp < 40:
         score_verdict = "Very Hot"
-    elif temp > 37:
-        score -= 40
+    else:
         score_verdict = "Dangerously Hot"
 
+    
     # Wind Logic
-    if wind > 20:
-        score -= 15
+    ideal_wind = 0
+    diff = abs(wind - ideal_wind) # gradually subtract points based on the difference (sway) from ideal_wind
+    score -= (diff * 0.5)
+    if wind < 5:
+        score_verdict += " & Calm Winds"
+    elif wind < 12:
+        score_verdict += " & Light Breeze"
+    elif wind < 20:
+        score_verdict += " & Breezy"
+    elif wind < 30:
         score_verdict += " & Windy"
-
+    elif wind < 50:
+        score_verdict += " & Strong Winds"
+    elif wind < 75:
+        score_verdict += " & Gale Force"
+    else:
+        score_verdict += " & Violent Storm"
+        
     # Rain Logic
-    if rain > 0:
-        score -= 20
-        score_verdict += " & Potential Rain"
+    ideal_rain = 0 
+    diff = abs(rain - ideal_rain) # gradually subtract points based on the difference (sway) from ideal_rain
+    score -= (diff * 4.0)
+    if rain == 0:
+        score_verdict += " & Dry Conditions"
+    elif rain < 0.5:    
+        score_verdict += " & Drizzling"
+    elif rain < 2.5:
+        score_verdict += " & Light Rain"
+    elif rain < 7.6:
+        score_verdict += " & Moderate Rain"
+    elif rain < 10:
+        score_verdict += " & Heavy Rain" 
+    elif rain < 50:
+        score_verdict += " & Potential Floods"
+    else:
+        score_verdict += " & Torrential/Flash Flooding"  
 
     return {"score": max(0, score), "score_verdict": score_verdict}
 
@@ -77,7 +118,7 @@ async def recommend_trip(
         geo_url = "https://geocoding-api.open-meteo.com/v1/search"
         geo_params = {
             "name": city, 
-            "count": 1,  
+            "count": 10,  
             "language": "en", 
             "format": "json"
         }
