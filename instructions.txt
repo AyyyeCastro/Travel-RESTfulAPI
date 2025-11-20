@@ -1,0 +1,45 @@
+Create a Virtual Environment (Important!):
+
+A virtual environment is a way to isolate the project's dependencies, and keep your PC "safe". 
+    This is highly recommended to avoid (version) conflicts with other programs you might have.
+
+For Windows:
+    python -m venv venv
+    venv\Scripts\activate
+
+
+For macOS / Linux:
+    python3 -m venv venv
+    source venv/bin/activate
+
+After running the activation command, you should see (venv) at the beginning of your terminal 
+    prompt. This indicates that the virtual environment is active.
+
+If you close the terminal, you'll need to re-activate the virtual environment the next time you
+    work on the project.
+
+
+Install Dependencies:
+    With the virtual environment activated, install the required Python packages:
+    pip install -r requirements.txt
+
+This command reads the requirements.txt file (which lists all the necessary packages) 
+    and installs them into your virtual environment. 
+
+
+Troubleshooting: 
+1. Running scripts is disabled on your system: 
+    -> run the following command first: 
+        "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process"
+            -> Follow steps above as normal.
+
+        Example.
+        PS C:\Users\acast\project>  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+        PS C:\Users\acast\project>  python -m venv venv
+        PS C:\Users\acast\project>  venv\Scripts\activate
+        (venv) PS C:\Users\acast\project> pip install -r requirements.txt
+
+#####
+TO RUN THE API 
+-> uvicorn main:app --reload
+-> in your browser paste: http://127.0.0.1:8000/docs
