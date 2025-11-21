@@ -40,72 +40,44 @@ def get_score(temp: float, wind: float, rain: float) -> dict:
     score = 100
     score_verdict = "Perfect"
 
-
-    # Temperature Logic
+    # Temperature Logic with swaying score from ideal temp
     ideal_temp = 25
-    diff = abs(temp - ideal_temp) # gradually subtract points based on the difference (sway) from ideal_temp
+    diff = abs(temp - ideal_temp)
     score -= (diff * 2.0)
-    if temp < -5:
-        score_verdict = "Dangerously Cold"
-    elif temp < 0:
-        score_verdict = "Freezing"
-    elif temp < 5:
-        score_verdict = "Very Cold"
-    elif temp < 10:
-        score_verdict = "Cold"
-    elif temp < 16:
-        score_verdict = "Chilly"
-    elif temp < 26:
-        score_verdict = "Perfect"
-    elif temp < 30:
-        score_verdict = "Warm"
-    elif temp < 35:
-        score_verdict = "Hot"
-    elif temp < 40:
-        score_verdict = "Very Hot"
-    else:
-        score_verdict = "Dangerously Hot"
+    if temp < -5: score_verdict = "Dangerously Cold"
+    elif temp < 0: score_verdict = "Freezing"
+    elif temp < 5: score_verdict = "Very Cold"
+    elif temp < 10: score_verdict = "Cold"
+    elif temp < 16: score_verdict = "Chilly"
+    elif temp < 26: score_verdict = "Perfect"
+    elif temp < 30: score_verdict = "Warm"
+    elif temp < 35: score_verdict = "Hot"
+    elif temp < 40: score_verdict = "Very Hot"
+    else: score_verdict = "Dangerously Hot"
 
-    
-    # Wind Logic
+    # Wind Logic with swaying score from ideal wind speed
     ideal_wind = 0
-    diff = abs(wind - ideal_wind) # gradually subtract points based on the difference (sway) from ideal_wind
+    diff = abs(wind - ideal_wind)
     score -= (diff * 0.5)
-    if wind < 5:
-        score_verdict += " & Calm Winds"
-    elif wind < 12:
-        score_verdict += " & Light Breeze"
-    elif wind < 20:
-        score_verdict += " & Breezy"
-    elif wind < 30:
-        score_verdict += " & Windy"
-    elif wind < 50:
-        score_verdict += " & Strong Winds"
-    elif wind < 75:
-        score_verdict += " & Gale Force"
-    else:
-        score_verdict += " & Violent Storm"
-        
-    # Rain Logic
-    ideal_rain = 0 
-    diff = abs(rain - ideal_rain) # gradually subtract points based on the difference (sway) from ideal_rain
-    score -= (diff * 4.0)
-    if rain == 0:
-        score_verdict += " & Dry Conditions"
-    elif rain < 0.5:    
-        score_verdict += " & Drizzling"
-    elif rain < 2.5:
-        score_verdict += " & Light Rain"
-    elif rain < 7.6:
-        score_verdict += " & Moderate Rain"
-    elif rain < 10:
-        score_verdict += " & Heavy Rain" 
-    elif rain < 50:
-        score_verdict += " & Potential Floods"
-    else:
-        score_verdict += " & Torrential/Flash Flooding"  
+    if wind < 5: score_verdict += " & Calm"
+    elif wind < 12: score_verdict += " & Light Breeze"
+    elif wind < 20: score_verdict += " & Breezy"
+    elif wind < 30: score_verdict += " & Windy"
+    elif wind < 50: score_verdict += " & Strong Winds"
+    else: score_verdict += " & Stormy"
 
-    return {"score": max(0, score), "score_verdict": score_verdict}
+    # Rain Logic with swaying score from ideal rain amount
+    ideal_rain = 0
+    diff = abs(rain - ideal_rain)
+    score -= (diff * 4.0)
+    if rain == 0: score_verdict += " & Dry"
+    elif rain < 2.5: score_verdict += " & Light Rain"
+    elif rain < 7.6: score_verdict += " & Rain"
+    elif rain < 50: score_verdict += " & Heavy Rain"
+    else: score_verdict += " & Flooding"
+
+    # Ensures the score is int 0 and not a negative
+    return {"score": max(0, int(score)), "score_verdict": score_verdict}
 
 # --- ENDPOINT ---
 @app.get("/recommend-trip", response_model=Recommendation)
