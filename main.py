@@ -11,7 +11,7 @@ app = FastAPI(
 )
 # Add CORS Middleware
 origins = [
-    "https://andrewcastro.dev/"
+    "https://andrewcastro.dev"
 ]
 app.add_middleware(
     CORSMiddleware,
