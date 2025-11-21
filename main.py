@@ -10,9 +10,12 @@ app = FastAPI(
     version="1.1.0",
 )
 # Add CORS Middleware
+origins = [
+    "https://andrewcastro.dev/"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=origins,  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
